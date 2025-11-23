@@ -1,87 +1,67 @@
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 import Navbar from '../components/Navbar.jsx';
-import { proPlayers } from '../utils/presets'; // Importamos la lista
-import { saveCrosshair } from '../utils/storage'; // Para guardar en tu perfil
+import { proPlayers } from '../utils/presets';
+import { supabase } from '../supabaseClient';
 
 export default function Gallery() {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const handleAddToMyProfile = (player) => {
-    // Guardamos una copia en TU localStorage
-    saveCrosshair({
-      nombre: `${player.nombre} (Config)`,
-      mapa: player.mapa,
-      codigo: player.codigo
-    });
-    // Te llevamos al dashboard para que veas que se guardó
-    alert(`¡La mira de ${player.nombre} se agregó a tu perfil!`);
-    navigate('/dashboard');
+  const handleAdd = async (player) => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return toast.error("Login required");
+
+    const { error } = await supabase.from('crosshairs').insert([{
+        user_id: user.id, nombre: `${player.nombre} (Config)`, mapa: player.mapa, codigo: player.codigo
+    }]);
+
+    if (error) toast.error(error.message);
+    else { toast.success(t('added_to_profile', { name: player.nombre })); navigate('/dashboard'); }
   };
 
   return (
-    <div>
+    <div className="min-h-screen bg-cs-dark text-white">
       <Navbar />
-      <div style={{ padding: '20px', maxWidth: '1000px', margin: '0 auto' }}>
+      <div className="max-w-7xl mx-auto px-4 py-10 sm:px-6 lg:px-8">
         
-        <h2 style={{ textAlign: 'center', marginBottom: '10px' }}>🏆 Pro Players Gallery</h2>
-        <p style={{ textAlign: 'center', color: '#666', marginBottom: '30px' }}>
-          Escanea el QR directamente o guarda la configuración en tu perfil.
-        </p>
+        <div className="text-center mb-16">
+            <h2 className="text-5xl font-black text-white tracking-tight mb-4">🏆 {t('gallery_title')}</h2>
+            <p className="text-xl text-cs-muted max-w-2xl mx-auto">{t('gallery_subtitle')}</p>
+        </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {proPlayers.map(player => (
-            <div key={player.id} style={{ border: '1px solid #eab308', borderRadius: '10px', overflow: 'hidden', background: '#1e1e1e', color: 'white' }}>
+            <div key={player.id} className="bg-cs-card border border-cs-border rounded-2xl overflow-hidden hover:border-cs-yellow/50 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group flex flex-col">
               
-              {/* Header de la Tarjeta */}
-              <div style={{ background: '#eab308', padding: '10px', color: 'black', fontWeight: 'bold', display: 'flex', justifyContent: 'space-between' }}>
-                <span>{player.nombre}</span>
-                <span style={{ fontSize: '0.8em', opacity: 0.8 }}>{player.equipo}</span>
+              {/* Header Amarilla */}
+              <div className="bg-cs-yellow p-4 flex justify-between items-center">
+                <h3 className="text-xl font-black text-black uppercase tracking-wide">{player.nombre}</h3>
+                <span className="text-xs font-bold bg-black/20 text-black px-2 py-1 rounded backdrop-blur-sm">{player.equipo}</span>
               </div>
 
-              <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '15px' }}>
-                
-                {/* EL QR GIGANTE (Lo que pediste) */}
-                <div style={{ background: 'white', padding: '10px', borderRadius: '5px' }}>
-                    <img 
-                        src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(player.codigo)}`} 
-                        alt={`QR ${player.nombre}`} 
-                    />
+              <div className="p-6 flex-1 flex flex-col items-center">
+                <div className="bg-white p-3 rounded-xl shadow-inner mb-6 group-hover:scale-105 transition-transform duration-300">
+                    <img src={`https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(player.codigo)}`} alt="QR" />
                 </div>
                 
-                <div style={{textAlign: 'center'}}>
-                    <p style={{fontSize: '0.9em', margin: '5px 0', color: '#ccc'}}>Mapa favorito: {player.mapa}</p>
-                    <code style={{display: 'block', fontSize: '0.7em', color: '#eab308', maxWidth: '250px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>
-                        {player.codigo}
-                    </code>
+                <div className="w-full text-center mb-6">
+                    <div className="inline-flex items-center gap-2 text-cs-muted text-sm mb-3">
+                        <span>🗺️</span> <span className="font-medium text-white">{player.mapa}</span>
+                    </div>
+                    <div className="bg-black/40 rounded p-2 border border-white/5">
+                        <code className="block text-xs text-green-400 font-mono truncate">{player.codigo}</code>
+                    </div>
                 </div>
 
-                {/* Botón de Acción */}
-                <button 
-                    onClick={() => handleAddToMyProfile(player)}
-                    style={{
-                        width: '100%',
-                        padding: '10px',
-                        background: 'transparent',
-                        border: '1px solid #eab308',
-                        color: '#eab308',
-                        borderRadius: '5px',
-                        cursor: 'pointer',
-                        fontWeight: 'bold',
-                        transition: '0.3s'
-                    }}
-                    onMouseOver={(e) => {e.target.style.background = '#eab308'; e.target.style.color = 'black'}}
-                    onMouseOut={(e) => {e.target.style.background = 'transparent'; e.target.style.color = '#eab308'}}
-                >
-                    💾 Guardar en Mis Miras
+                <button onClick={() => handleAdd(player)} className="w-full mt-auto border-2 border-cs-yellow text-cs-yellow hover:bg-cs-yellow hover:text-black font-bold py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2">
+                    <span>💾</span> {t('save_to_profile')}
                 </button>
-
               </div>
             </div>
           ))}
         </div>
-
       </div>
     </div>
   );

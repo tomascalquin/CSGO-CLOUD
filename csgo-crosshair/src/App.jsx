@@ -1,73 +1,62 @@
+import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { Toaster } from 'sonner';
+import { supabase } from './supabaseClient'; 
+
+// Páginas
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Editor from './pages/Editor';
 import Gallery from './pages/Gallery'; 
-import Practice from './pages/Practice'; // <--- IMPORTANTE: Importamos la página nueva
+import Practice from './pages/Practice';
+import Binds from './pages/Binds';
+import Autoexec from './pages/Autoexec';
 
-// Componente que protege las rutas (si no estás logueado, te saca)
+// Componente de Ruta Protegida Inteligente
 const ProtectedRoute = ({ children }) => {
-  const user = localStorage.getItem('csgo_current_user');
-  if (!user) {
+  const [session, setSession] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // 1. Verificamos sesión actual al cargar
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setLoading(false);
+    });
+
+    // 2. Escuchamos cambios (login/logout) en tiempo real
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+      setLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  if (loading) return <div style={{color: 'white', textAlign: 'center', marginTop: '50px'}}>Cargando...</div>;
+  
+  if (!session) {
     return <Navigate to="/" replace />;
   }
+
   return children;
 };
 
 function App() {
   return (
     <BrowserRouter>
+      <Toaster position="top-right" richColors />
       <Routes>
-        {/* Ruta Pública: Login */}
         <Route path="/" element={<Login />} />
-
-        {/* Rutas Privadas (Solo con sesión iniciada) */}
         
-        <Route 
-          path="/dashboard" 
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          } 
-        />
-        
-        <Route 
-          path="/editor" 
-          element={
-            <ProtectedRoute>
-              <Editor />
-            </ProtectedRoute>
-          } 
-        />
-
-        <Route 
-          path="/editor/:id" 
-          element={
-            <ProtectedRoute>
-              <Editor />
-            </ProtectedRoute>
-          } 
-        />
-
-        <Route 
-          path="/gallery" 
-          element={
-            <ProtectedRoute>
-              <Gallery />
-            </ProtectedRoute>
-          } 
-        />
-
-        {/* NUEVA RUTA: Práctica */}
-        <Route 
-          path="/practice" 
-          element={
-            <ProtectedRoute>
-              <Practice />
-            </ProtectedRoute>
-          } 
-        />
+        {}
+        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+        <Route path="/editor" element={<ProtectedRoute><Editor /></ProtectedRoute>} />
+        <Route path="/editor/:id" element={<ProtectedRoute><Editor /></ProtectedRoute>} />
+        <Route path="/gallery" element={<ProtectedRoute><Gallery /></ProtectedRoute>} />
+        <Route path="/practice" element={<ProtectedRoute><Practice /></ProtectedRoute>} />
+        <Route path="/binds" element={<ProtectedRoute><Binds /></ProtectedRoute>} />
+        <Route path="/autoexec" element={<ProtectedRoute><Autoexec /></ProtectedRoute>} />
 
       </Routes>
     </BrowserRouter>
