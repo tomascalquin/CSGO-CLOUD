@@ -102,4 +102,15 @@
   "nav_practice": "Práctica",
   "nav_binds": "Binds",
   "nav_config": "Config"
+  ,
+  "nav_sens": "Sensi",
+  "sens_title": "Calculadora de Sensibilidad",
+  "sens_subtitle": "Calcula tu eDPI real y convierte tu sensibilidad a otros juegos.",
+  "your_settings": "Tus Configuraciones",
+  "game_sens": "Sensibilidad del Juego"
+  ,
+  "input_game_title": "Juego de Origen",
+  "select_game": "Selecciona el juego del que vienes",
+  "converted_sens": "Tu Sensibilidad en CS2",
+  "sens_tip": "Si vienes de Valorant, notarás que la sensibilidad numérica es más alta en CS2, pero la distancia que mueves el mouse será idéntica."
 }

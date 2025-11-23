@@ -101,4 +101,15 @@
   "nav_practice": "Practice",
   "nav_binds": "Binds",
   "nav_config": "Config"
+  ,
+  "nav_sens": "Sens",
+  "sens_title": "Sensitivity Calculator",
+  "sens_subtitle": "Calculate your true eDPI and convert sensitivity to other games.",
+  "your_settings": "Your Settings",
+  "game_sens": "In-Game Sensitivity"
+  ,
+  "input_game_title": "Source Game",
+  "select_game": "Select the game you come from",
+  "converted_sens": "Your CS2 Sensitivity",
+  "sens_tip": "If coming from Valorant, you'll notice the numerical value is higher in CS2, but the physical mouse distance remains identical."
 }

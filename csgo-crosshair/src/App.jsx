@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'sonner';
 import { supabase } from './supabaseClient'; 
 
+
 // Páginas
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
@@ -11,6 +12,7 @@ import Gallery from './pages/Gallery';
 import Practice from './pages/Practice';
 import Binds from './pages/Binds';
 import Autoexec from './pages/Autoexec';
+import Sensitivity from './pages/Sensitivity';
 
 // Componente de Ruta Protegida Inteligente
 const ProtectedRoute = ({ children }) => {
@@ -57,6 +59,7 @@ function App() {
         <Route path="/practice" element={<ProtectedRoute><Practice /></ProtectedRoute>} />
         <Route path="/binds" element={<ProtectedRoute><Binds /></ProtectedRoute>} />
         <Route path="/autoexec" element={<ProtectedRoute><Autoexec /></ProtectedRoute>} />
+        <Route path="/sensitivity" element={<ProtectedRoute><Sensitivity /></ProtectedRoute>} />
 
       </Routes>
     </BrowserRouter>

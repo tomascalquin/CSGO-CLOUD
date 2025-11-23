@@ -48,6 +48,9 @@ export default function Navbar() {
                 </Link>
                 <Link to="/autoexec" className={`${linkClass} ${isActive('/autoexec')}`}>
                     ⚙️ {t('nav_config')}
+                    <Link to="/sensitivity" className={`${linkClass} ${isActive('/sensitivity')}`}>
+    🖱️ {t('nav_sens')}
+</Link>
                 </Link>
             </div>
           </div>
