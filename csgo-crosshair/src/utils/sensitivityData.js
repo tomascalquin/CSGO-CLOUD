@@ -1,5 +1,5 @@
 export const games = [
-  // --- GRUPO A: Riot / Competitivos ---
+
   { 
     id: 'valorant', 
     name: 'Valorant', 
@@ -13,7 +13,7 @@ export const games = [
     icon: '🛡️' 
   },
   
-  // --- GRUPO B: Source / Quake Engine (Misma escala que CS2) ---
+
   { 
     id: 'apex', 
     name: 'Apex Legends', 
@@ -69,7 +69,7 @@ export const games = [
     icon: '🌀' 
   },
   
-  // --- GRUPO C: Escalas Únicas ---
+ 
   { 
     id: 'fortnite', 
     name: 'Fortnite (Slider)', 

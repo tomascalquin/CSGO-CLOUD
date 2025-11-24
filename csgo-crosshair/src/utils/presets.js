@@ -1,5 +1,5 @@
 export const proPlayers = [
-  // --- NAVI ---
+
   {
     id: 'p1',
     nombre: "S1mple",
@@ -36,7 +36,7 @@ export const proPlayers = [
     codigo: "CSGO-iM23-Roman-ianBe-astRi-fler1"
   },
 
-  // --- G2 ESPORTS ---
+ 
   {
     id: 'p6',
     nombre: "NiKo",
@@ -59,7 +59,7 @@ export const proPlayers = [
     codigo: "CSGO-fBSrW-pDm27-mYJ0L-qKz8N-tVw4X"
   },
 
-  // --- TEAM SPIRIT ---
+ 
   {
     id: 'p9',
     nombre: "donk",
@@ -82,7 +82,7 @@ export const proPlayers = [
     codigo: "CSGO-tC35-zR12-qW46-eY89-uI07"
   },
 
-  // --- VITALITY ---
+ 
   {
     id: 'p12',
     nombre: "ZywOo",
@@ -105,7 +105,7 @@ export const proPlayers = [
     codigo: "CSGO-Sp1n-xIsr-aelP-ower-Rifl3"
   },
 
-  // --- FAZE CLAN ---
+ 
   {
     id: 'p15',
     nombre: "ropz",
@@ -142,7 +142,7 @@ export const proPlayers = [
     codigo: "CSGO-Fr0z-enAi-mGod-2024-CS2Go"
   },
 
-  // --- ASTRALIS & LIQUID ---
+
   {
     id: 'p20',
     nombre: "dev1ce",
@@ -165,7 +165,7 @@ export const proPlayers = [
     codigo: "CSGO-NAF-Fly-Can-ada-CS2-2025"
   },
 
-  // --- VIRTUS.PRO & MOUZ ---
+ 
   {
     id: 'p23',
     nombre: "Jame",
@@ -195,7 +195,7 @@ export const proPlayers = [
     codigo: "CSGO-Jimp-phat-Fin-land-Aim1"
   },
 
-  // --- COMPLEXITY & OTHERS ---
+
   {
     id: 'p27',
     nombre: "EliGE",

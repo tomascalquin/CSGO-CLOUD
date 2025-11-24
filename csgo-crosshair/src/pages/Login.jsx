@@ -18,7 +18,7 @@ export default function Login() {
     try {
       let result;
       
-      // CORRECCIÓN: Llamamos a las funciones directamente para no perder el contexto
+   
       if (isRegistering) {
         result = await supabase.auth.signUp({
           email: formData.email,
