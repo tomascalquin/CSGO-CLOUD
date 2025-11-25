@@ -8,7 +8,7 @@ export default function Login() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [isRegistering, setIsRegistering] = useState(false);
-  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [formData, setFormData] = ({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
