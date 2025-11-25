@@ -1,7 +1,7 @@
 export const weaponCategories = [
     {
       id: 'pistols',
-      label: 'pistols', // Clave para traducción
+      label: 'pistols',
       items: [
         { id: 'glock', name: 'Glock-18' },
         { id: 'hkp2000', name: 'P2000' },

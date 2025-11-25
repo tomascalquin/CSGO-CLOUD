@@ -11,39 +11,21 @@ export default function Dashboard() {
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
 
-  // Cargar datos desde Supabase
   const fetchCrosshairs = async () => {
     setLoading(true);
-    const { data, error } = await supabase
-      .from('crosshairs')
-      .select('*')
-      .order('created_at', { ascending: false });
-
-    if (error) {
-      toast.error('Error al cargar miras: ' + error.message);
-    } else {
-      setItems(data);
-    }
+    const { data, error } = await supabase.from('crosshairs').select('*').order('created_at', { ascending: false });
+    if (error) toast.error(error.message);
+    else setItems(data);
     setLoading(false);
   };
 
-  useEffect(() => {
-    fetchCrosshairs();
-  }, []);
+  useEffect(() => { fetchCrosshairs(); }, []);
 
   const handleDelete = async (id) => {
     if (confirm(t('delete_confirm'))) {
-      const { error } = await supabase
-        .from('crosshairs')
-        .delete()
-        .eq('id', id);
-
-      if (error) {
-        toast.error('Error al borrar');
-      } else {
-        toast.success('Mira eliminada');
-        fetchCrosshairs(); // Recargar lista
-      }
+      const { error } = await supabase.from('crosshairs').delete().eq('id', id);
+      if (error) toast.error('Error');
+      else { toast.success('Eliminado'); fetchCrosshairs(); }
     }
   };
 
@@ -52,87 +34,58 @@ export default function Dashboard() {
     toast.success(t('copy_success'));
   };
 
-  const filteredItems = items.filter(item => 
-    item.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    item.mapa.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredItems = items.filter(item => item.nombre.toLowerCase().includes(searchTerm.toLowerCase()) || item.mapa.toLowerCase().includes(searchTerm.toLowerCase()));
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f3f4f6' }}>
+    <div className="min-h-screen bg-cs-dark text-white">
       <Navbar />
-      <div style={{ padding: '30px 20px', maxWidth: '900px', margin: '0 auto' }}>
-        
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px', flexWrap: 'wrap', gap: '15px' }}>
+      <div className="max-w-7xl mx-auto px-4 py-10 sm:px-6 lg:px-8">
+        <div className="flex flex-col md:flex-row justify-between items-center mb-10 gap-6">
           <div>
-            <h2 style={{ margin: 0, fontSize: '2rem', color: '#1f2937' }}>{t('dashboard_title')}</h2>
-            <p style={{ margin: '5px 0 0 0', color: '#6b7280' }}>{t('dashboard_subtitle')}</p>
+            <h2 className="text-4xl font-black text-white tracking-tight mb-2">{t('dashboard_title')}</h2>
+            <p className="text-cs-muted text-lg">{t('dashboard_subtitle')}</p>
           </div>
-          
-          <Link to="/editor" style={{ 
-              background: '#eab308', color: 'black', padding: '12px 25px', 
-              textDecoration: 'none', borderRadius: '8px', fontWeight: 'bold',
-              display: 'flex', alignItems: 'center', gap: '8px'
-          }}>
-            <span>+</span> {t('add_new')}
+          <Link to="/editor" className="group relative inline-flex items-center gap-2 bg-cs-yellow text-black px-6 py-3 rounded-xl font-bold text-lg overflow-hidden transition-transform active:scale-95 hover:shadow-[0_0_20px_rgba(234,179,8,0.3)]">
+            <span className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
+            <span className="relative">+ {t('add_new')}</span>
           </Link>
         </div>
 
-        <div style={{ marginBottom: '25px' }}>
-            <input 
-                type="text" placeholder={t('search_placeholder')}
-                value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
-                style={{ width: '100%', padding: '15px 20px', borderRadius: '12px', border: '1px solid #e5e7eb', fontSize: '16px', outline: 'none' }}
-            />
+        <div className="relative mb-10 group">
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><span className="text-gray-500 text-xl">🔍</span></div>
+            <input type="text" placeholder={t('search_placeholder')} value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="w-full bg-cs-card border border-cs-border text-white pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:border-cs-yellow focus:ring-1 focus:ring-cs-yellow transition-all shadow-lg text-lg placeholder-gray-500" />
         </div>
 
-        {loading ? (
-          <p style={{textAlign: 'center', color: '#6b7280'}}>Cargando miras...</p>
-        ) : filteredItems.length === 0 ? (
-          <div style={{textAlign: 'center', padding: '50px', background: 'white', borderRadius: '12px', border: '2px dashed #e5e7eb'}}>
-            <p style={{color: '#9ca3af', fontSize: '1.1rem'}}>{t('no_crosshairs_found')}</p>
-            <Link to="/editor" style={{color: '#eab308', fontWeight: 'bold', textDecoration: 'none'}}>{t('create_first')}</Link>
+        {loading ? <div className="text-center py-20 animate-pulse text-cs-muted">Cargando...</div> : filteredItems.length === 0 ? (
+          <div className="text-center py-20 bg-cs-card/50 border-2 border-dashed border-cs-border rounded-2xl">
+            <p className="text-cs-muted text-xl mb-4">{t('no_crosshairs_found')}</p>
+            <Link to="/editor" className="text-cs-yellow hover:underline font-bold text-lg">{t('create_first')}</Link>
           </div>
         ) : (
-          <div style={{ display: 'grid', gap: '20px' }}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredItems.map(item => (
-              <div key={item.id} style={{ border: '1px solid #e5e7eb', padding: '25px', borderRadius: '16px', background: 'white', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}>
-                
-                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '15px'}}>
+              <div key={item.id} className="bg-cs-card border border-cs-border rounded-2xl p-6 hover:border-cs-yellow/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl group flex flex-col">
+                <div className="flex justify-between items-start mb-4">
                     <div>
-                      <h3 style={{margin: '0 0 8px 0', color: '#111827', fontSize: '1.25rem'}}>{item.nombre}</h3>
-                      <span style={{background: '#f3f4f6', padding: '4px 12px', borderRadius: '20px', fontSize: '0.85em', color: '#4b5563', fontWeight: '500'}}>
-                          🗺️ {item.mapa}
-                      </span>
+                      <h3 className="text-xl font-bold text-white truncate max-w-[200px]">{item.nombre}</h3>
+                      <span className="inline-block mt-1 px-3 py-1 bg-black/30 rounded-full text-xs font-medium text-cs-muted border border-white/5">🗺️ {item.mapa}</span>
                     </div>
-                    <div style={{display: 'flex', gap: '8px'}}>
-                        <Link to={`/editor/${item.id}`}>
-                            <button style={{cursor: 'pointer', padding: '8px 12px', background: '#f3f4f6', border: 'none', borderRadius: '6px'}}>✏️</button>
-                        </Link>
-                        <button onClick={() => handleDelete(item.id)} style={{cursor: 'pointer', padding: '8px 12px', background: '#fee2e2', border: 'none', borderRadius: '6px', color: '#ef4444'}}>🗑️</button>
+                    <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Link to={`/editor/${item.id}`} className="p-2 hover:bg-white/10 rounded-lg transition-colors">✏️</Link>
+                        <button onClick={() => handleDelete(item.id)} className="p-2 hover:bg-red-500/20 text-red-400 rounded-lg transition-colors">🗑️</button>
                     </div>
                 </div>
+              
+                <div className="bg-black/40 rounded-lg p-3 mb-6 border border-white/5 flex items-center gap-3 group/code cursor-pointer overflow-hidden" onClick={() => handleCopy(item.codigo)}>
+                    <code className="flex-1 min-w-0 text-green-400 text-xs font-mono truncate">{item.codigo}</code>
+                    <span className="text-xs font-bold text-cs-yellow opacity-0 group-hover/code:opacity-100 transition-opacity whitespace-nowrap">COPY</span>
+                </div>
+               
 
-                <div style={{ display: 'flex', alignItems: 'center', background: '#111827', padding: '12px', borderRadius: '8px', gap: '15px', border: '1px solid #374151' }}>
-                    <code style={{ color: '#4ade80', flex: 1, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', fontFamily: 'monospace', fontSize: '0.9rem' }}>
-                      {item.codigo}
-                    </code>
-                    <button onClick={() => handleCopy(item.codigo)} style={{background: '#eab308', border: 'none', padding: '8px 16px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer', color: 'black', fontSize: '0.85rem'}}>
-                      {t('copy_button')}
-                    </button>
+                <div className="mt-auto pt-4 border-t border-white/5 flex items-center gap-4">
+                    <div className="bg-white p-1 rounded"><img src={`https://api.qrserver.com/v1/create-qr-code/?size=60x60&data=${encodeURIComponent(item.codigo)}`} alt="QR" className="w-12 h-12" /></div>
+                    <div><strong className="block text-sm text-white mb-1">{t('mobile_version')}</strong><p className="text-xs text-cs-muted leading-tight">{t('scan_qr')}</p></div>
                 </div>
-                
-                <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginTop: '20px', borderTop: '1px solid #f3f4f6', paddingTop: '20px' }}>
-                    <img 
-                      src={`https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(item.codigo)}`} 
-                      alt="QR" 
-                      style={{border: '1px solid #e5e7eb', padding: '5px', borderRadius: '8px'}}
-                    />
-                    <div>
-                      <strong style={{display: 'block', fontSize: '1rem', color: '#374151', marginBottom: '4px'}}>{t('mobile_version')}</strong>
-                      <span style={{fontSize: '0.9em', color: '#6b7280'}}>{t('scan_qr')}</span>
-                    </div>
-                </div>
-
               </div>
             ))}
           </div>
