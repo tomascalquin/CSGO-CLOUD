@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: 'class', 
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -8,13 +9,13 @@ export default {
     extend: {
       colors: {
         cs: {
-          yellow: '#eab308',     // Amarillo principal
+          yellow: '#eab308',
           yellowHover: '#ca8a04',
-          dark: '#0f172a',       // Fondo oscuro
-          card: '#1e293b',       // Fondo tarjetas
-          border: '#334155',     // Bordes
-          text: '#f8fafc',       // Texto blanco
-          muted: '#94a3b8'       // Texto gris
+          dark: '#0f172a',
+          card: '#1e293b',
+          border: '#334155',
+          text: '#f8fafc',
+          muted: '#94a3b8'
         }
       },
       fontFamily: {

@@ -8,11 +8,9 @@ export default function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
   
-  // Estado para controlar si el menú móvil está abierto o cerrado
   const [isOpen, setIsOpen] = useState(false);
   const [theme, setTheme] = useState('dark');
 
-  // Efecto para el modo oscuro
   useEffect(() => {
     if (theme === 'dark') {
       document.documentElement.classList.add('dark');
@@ -30,7 +28,6 @@ export default function Navbar() {
     navigate('/');
   };
 
-  // Función para resaltar la ruta activa
   const isActive = (path) => location.pathname === path 
     ? "text-yellow-600 dark:text-cs-yellow bg-yellow-50 dark:bg-cs-yellow/10" 
     : "text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5";
@@ -42,7 +39,7 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           
-          {/* LOGO */}
+   
           <div className="flex items-center gap-8">
             <Link to="/dashboard" className="flex items-center gap-2 group" onClick={() => setIsOpen(false)}>
                 <span className="text-2xl group-hover:scale-110 transition-transform duration-300">⚡</span>
@@ -51,7 +48,7 @@ export default function Navbar() {
                 </span>
             </Link>
             
-            {/* MENU ESCRITORIO (Se oculta en móviles 'hidden') */}
+           
             <div className="hidden md:flex items-center gap-2">
                 <Link to="/dashboard" className={`${linkClass} ${isActive('/dashboard')}`}>🎯 {t('nav_dashboard')}</Link>
                 <Link to="/gallery" className={`${linkClass} ${isActive('/gallery')}`}>🏆 {t('nav_gallery')}</Link>
@@ -62,31 +59,29 @@ export default function Navbar() {
             </div>
           </div>
           
-          {/* ZONA DERECHA */}
+       
           <div className="flex items-center gap-3">
             
-            {/* Botón de Tema (Visible siempre) */}
+      
             <button onClick={toggleTheme} className="p-2 rounded-lg bg-gray-100 dark:bg-cs-card text-xl border border-gray-200 dark:border-cs-border hover:scale-105 transition-transform">
                 {theme === 'dark' ? '🌙' : '☀️'}
             </button>
 
-            {/* Botones de Idioma (Solo escritorio) */}
+         
             <div className="hidden md:flex bg-gray-100 dark:bg-cs-card rounded-lg p-1 border border-gray-200 dark:border-cs-border">
               <button onClick={() => i18n.changeLanguage('es')} className={`px-2 py-1 rounded text-xs font-bold ${i18n.language === 'es' ? 'bg-white dark:bg-cs-border text-black dark:text-white shadow-sm' : 'text-gray-400'}`}>ES</button>
               <button onClick={() => i18n.changeLanguage('en')} className={`px-2 py-1 rounded text-xs font-bold ${i18n.language === 'en' ? 'bg-white dark:bg-cs-border text-black dark:text-white shadow-sm' : 'text-gray-400'}`}>EN</button>
             </div>
 
-            {/* Botón Logout (Solo escritorio) */}
             <button onClick={handleLogout} className="hidden md:block bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-500 px-4 py-2 rounded-lg text-sm font-bold border border-red-200 dark:border-red-500/20 hover:bg-red-100 dark:hover:bg-red-500/20 transition-colors">
               {t('logout')}
             </button>
 
-            {/* --- BOTÓN HAMBURGUESA (Solo Móvil 'md:hidden') --- */}
+   
             <button 
               onClick={() => setIsOpen(!isOpen)} 
-              className="md:hidden p-2 text-slate-900 dark:text-white rounded-lg hover:bg-gray-100 dark:hover:bg-white/10 focus:outline-none transition-colors"
+              className="md:hidden p-2 text-slate-900 dark:text-white rounded-lg hover:bg-gray-100 dark:hover:bg-white/10 focus:outline-none border border-transparent focus:border-gray-300 dark:focus:border-white/20"
             >
-              {/* Ícono cambia si está abierto (X) o cerrado (≡) */}
               <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 {isOpen ? (
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -99,11 +94,9 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* --- MENÚ DESPLEGABLE MÓVIL --- */}
       {isOpen && (
-        <div className="md:hidden border-t border-gray-200 dark:border-white/10 bg-white dark:bg-cs-dark px-4 pt-2 pb-6 space-y-2 shadow-xl animate-in slide-in-from-top-5 duration-200">
+        <div className="md:hidden border-t border-gray-200 dark:border-white/10 bg-white dark:bg-cs-dark px-4 pt-4 pb-6 space-y-3 shadow-xl animate-in slide-in-from-top-5 duration-200 absolute w-full left-0 z-50">
           
-          {/* Enlaces de Navegación */}
           <Link to="/dashboard" onClick={() => setIsOpen(false)} className={`block w-full ${linkClass} ${isActive('/dashboard')}`}>🎯 {t('nav_dashboard')}</Link>
           <Link to="/gallery" onClick={() => setIsOpen(false)} className={`block w-full ${linkClass} ${isActive('/gallery')}`}>🏆 {t('nav_gallery')}</Link>
           <Link to="/practice" onClick={() => setIsOpen(false)} className={`block w-full ${linkClass} ${isActive('/practice')}`}>🛠️ {t('nav_practice')}</Link>
@@ -111,10 +104,8 @@ export default function Navbar() {
           <Link to="/autoexec" onClick={() => setIsOpen(false)} className={`block w-full ${linkClass} ${isActive('/autoexec')}`}>⚙️ {t('nav_config')}</Link>
           <Link to="/sensitivity" onClick={() => setIsOpen(false)} className={`block w-full ${linkClass} ${isActive('/sensitivity')}`}>🖱️ {t('nav_sens')}</Link>
           
-          {/* Separador */}
           <div className="h-px bg-gray-200 dark:bg-white/10 my-4"></div>
           
-          {/* Controles Móviles (Idioma y Salir) */}
           <div className="flex gap-3 mb-4">
              <button onClick={() => i18n.changeLanguage('es')} className={`flex-1 py-3 rounded-lg font-bold text-center border ${i18n.language === 'es' ? 'bg-yellow-500 border-yellow-500 text-white' : 'bg-gray-50 dark:bg-cs-card border-gray-200 dark:border-cs-border text-gray-500'}`}>Español</button>
              <button onClick={() => i18n.changeLanguage('en')} className={`flex-1 py-3 rounded-lg font-bold text-center border ${i18n.language === 'en' ? 'bg-yellow-500 border-yellow-500 text-white' : 'bg-gray-50 dark:bg-cs-card border-gray-200 dark:border-cs-border text-gray-500'}`}>English</button>
